@@ -1,0 +1,7 @@
+/**
+ * @license Copyright (c) 2009-2013, xhEditor.com. All rights reserved.
+ * For licensing, see LGPL-LICENSE.txt or http://xheditor.com/license/lgpl.txt
+ */
+XHEDITOR.setLang({
+    'default': '榛樿',
+    'none': '鏃

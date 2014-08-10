@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>礼物管家-礼物候选</h1>
+<table border="1">
+{% for liwu in post%}
+    <tr>
+    <td><img width=120 height=120 src={{ liwu.imageUrl }}></td>
+    <td>{{ liwu.title }}</td>
+    <td><a href={{ liwu.click}}> 编辑 </a></td>
+    </tr>
+{% endfor %}
+</body>
+</html>
