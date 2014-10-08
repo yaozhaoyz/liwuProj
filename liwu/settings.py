@@ -10,14 +10,24 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'y7w*-a^63tjcsogf2jg0&ua&+sgw_z5l1(k7h2_=&_khyexs3n'
+URL_PREFIX = 'http://115.28.9.133:8088'
+BASE_DIR = os.path.dirname(__file__)
+MEDIA_URL = "http://115.28.9.133:8088/"
+QINIU_URL = "http://celebritymedia.qiniudn.com/media/"
+QINIU_XHURL = "http://celebritymedia.qiniudn.com/"
+MEDIA_ROOT = BASE_DIR + "/media/"
+ROOT_URLCONF = 'liwu.urls'
+
+ACCESS_KEY = "eA-tOav_Umkcqhj2mxrb61y6uItnNPTm2p_8NDmx"
+SECRET_KEY = "4tPYpEkL0YAn0NtN1nPIf-AoY29F3e2VSJr0nmwM"
+BUCKET_NAME = "celebritymedia"
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,7 +55,7 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+ #   'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -81,9 +91,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
-STATIC_URL = '/static/'
-URL_PREFIX = 'http://115.28.9.133:8088'
+UEDITOR_SETTINGS = {
+    'toolbars':{"testa":[['fullscreen', 'source', '|', 'undo', 'redo', '|','bold', 'italic', 'underline']],
+        "testb":[[ 'source', '|','bold', 'italic', 'underline']]
+    },
+    'images_upload':{
+        'max_size':0,
+        'path':"asd"
+    },
+    'scrawl_upload':{
+        'path':'scrawlabc'
+    }
+}

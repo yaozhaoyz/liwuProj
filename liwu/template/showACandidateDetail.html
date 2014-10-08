@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="http://xheditor.com/demos/common.css" type="text/css" media="screen" />
+    <script type="text/javascript" charset="utf-8" src="../xheditor/jquery/jquery-1.4.4.min.js"></script>
+    <!--<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>-->
+    <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../xheditor/xheditor-1.2.1.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../xheditor/xheditor_lang/zh-cn.js"></script>
+</head>
+<script type="text/javascript">
+    function insertUpload(arrMsg)
+    {
+        console.log(arrMsg)
+        var i,msg;
+        for(i=0;i<arrMsg.length;i++)
+        {
+            msg=arrMsg[i];
+            $("#uploadList").append('<option value="'+msg.id+'">'+msg.localname+'</option>');
+        }
+    }
+function currentTime(){
+    var d = new Date(),str = '';
+    var h = d.getHours();
+    var m = d.getMinutes();
+    var s = d.getSeconds();
+    var day = d.getDate();
+    var mon = d.getMonth()+1;
+    var hstr = h;
+    var mstr = m;
+    var istr = s;
+    var daystr = day;
+    var monstr = mon;
+    if (h < 10) { hstr = "0" + h };
+    if (m < 10) { mstr = "0" + m };
+    if (s < 10) { istr = "0" + s };
+    if (day < 10) { daystr = "0" + day};
+    if (mon < 10) { monstr = "0" + mon };
+    str += d.getFullYear()+'-';
+    str  += monstr +'-';
+    str  += daystr + ' ';
+    str += hstr+':'; 
+    str  += mstr +''; 
+    return str;
+}
+
+$(function() {
+        var availableTime = [
+        "2014-03-15 22:17",
+        "2015-03-15 22:17",
+        ];
+        var postFromValue = [
+        "新浪微博",
+        "腾讯微博",
+        "大麦网",
+        ];
+        $( ".updateTime" ).autocomplete({
+source: availableTime
+});
+        $( ".posterFrom" ).autocomplete({
+source: postFromValue 
+});
+//$(".searchCelebrity").autocomplete({
+//source: "searchCelebrity",
+//minLength: 1
+//});
+        });
+
+$(document).ready(function() {
+        $('#elm1').xheditor({upImgUrl:"http://115.28.9.133:8088/liwu/uploadImgXheditor/",upImgExt:"jpg,jpeg,gif,png"});
+        document.getElementById('updateTime').value = currentTime(); 
+        $('.errorTime').hide();
+        $('.errorImg').hide();
+        $('.errorId').hide();
+        $('.submit').click(function(event){
+            $('.errorTime').hide();
+            $('.errorImg').hide();
+            $('.errorId').hide();
+            var updateTime=$('.updateTime').val();
+            if(valid_time(updateTime)) {
+            $('.errorTime').hide();
+            } else {
+            $('.errorTime').show();
+            event.preventDefault();
+            }
+            var id=$('.celebrity').val();
+            if(valid_celebrityId(id)) {
+            $('.errorId').hide();
+            } else {
+            $('.errorId').show();
+            event.preventDefault();
+            }
+            var input, file, fr, img;
+            input = document.getElementById('PicFile');
+            file = input.files[0];
+            fr = new FileReader();
+            fr.onload= createImage;
+            fr.readAsDataURL(file);
+
+            function createImage() {
+            img = document.createElement('img');
+            img.src = fr.result;
+            if(img.width!=640 || img.height<480 || img.height>640)
+            {
+                $('.errorImg').show();
+                event.preventDefault();
+            }}
+            });
+        });
+
+function valid_image(image){//检查是否为图片地址(jpg gif png bmp jpeg ) 
+    var patten = new RegExp( /^(http|HTTP):\/\/([\w-]+\.)+(jpg|JPG|png|PNG|gif|GIF|bmp|BMP|jpeg|JPEG)$/); 
+    return patten.test(image);
+} 
+function valid_time(time){//检查是否为合格的时间格式 
+    var patten = new RegExp( /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]$/); 
+    return patten.test(time);
+}
+function valid_celebrityId(id){//检查是否为合格的Id格式  :w
+    var patten = new RegExp( /^[0-9;]+$/); 
+    return patten.test(id);
+}
+function OnInput (event) {
+        $(".searchCelebrity").autocomplete({
+        source: "searchCelebrity",
+        minLength: 1
+        });
+}
+</script>
+<body>
+<h1>编辑礼物</h1>
+<form method="post" action="/liwu/save2hasEditedDB" enctype="multipart/form-data" accept-charset="utf-8">
+{% csrf_token %}
+<li>标题  <input type="text" name="title" class="title"  value="{{post.title}}"size=80> </li> 
+<li>详情url <input type="text" name="itemURL" class="itemURL" value="{{post.itemURL}}" size=80></li>
+<li>价格(元)  <input type="text" name="price" class="price" value="{{post.price}}" size=80></li>
+<li>价格档次  <select  name="priceRank" class="priceRank" value="{{post.priceRank}}" ><option>7</option><option selected="selected">4</option><option>1</option></select></li>
+<li>评价分数  <input type="text" name="rate" class="rate" value="{{post.rate}}" size=80></li>
+<li>销量 <input type="text" name="soldAmout" class="soldAmout" value="{{post.soldAmout}}" size=80></li>
+<li>图片链接 <input type="text" name="imageUrl" class="imageUrl" value="{{post.imageUrl}}" size=80></li>
+<li>商品介绍、推荐理由  <p></p><textarea id="elm1" name="elm1"  rows="20" cols="50" style="width: 80%" value="{{post.itemDesc}}" ></textarea></li>
+<li>适合人群 <input type="text" name="liwuPersonTag" class="liwuPersonTag" value="{{post.liwuPersonTag}}" size=80></li>
+<li>送礼场景  <input type="text" name="liwuSeasonTag" class="liwuSeasonTag" value="{{post.liwuSeasonTag}}" size=80></li>
+<li>礼物标签 <input type="text" name="liwuTags" class="liwuTags" value="{{post.liwuSeasonTag}}" size=80></li>
+<li>适合男女 <input type="text" name="liwuGender" class="liwuGender" value="{{post.liwuGender}}" size=80></li>
+<li>礼物指数 <input type="text" name="scoreAsLiwu" class="scoreAsLiwu" value="{{post.scoreAsLiwu}}" size=80></li>
+<p></p>
+<input type="submit" class="submit" value="提交编辑">
+</form>
+</body>
+</html>
